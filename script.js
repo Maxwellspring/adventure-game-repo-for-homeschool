@@ -86,7 +86,7 @@ const mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     constraint: {
         render: {
-            visible:true
+            visible: true
         }
     }
 });
@@ -106,30 +106,30 @@ Runner.run(runner, engine);
 let cameraX = 500; // Start at the left edge
 
 function moveScreen(x) {
-  let bounds = render.bounds;
-  // Calculate the new bounds based on cameraX
-  bounds.min.x = x - (render.canvas.width / 6);
-  bounds.max.x = x + (render.canvas.width / 6);
+    let bounds = render.bounds;
+    // Calculate the new bounds based on cameraX
+    bounds.min.x = x - (render.canvas.width / 6);
+    bounds.max.x = x + (render.canvas.width / 6);
 }
 
 // Example: Move the screen to the right
 function moveRight() {
-  cameraX += 10; // Move 10 pixels to the right
-  moveScreen(cameraX);
+    cameraX += 10; // Move 10 pixels to the right
+    moveScreen(cameraX);
 }
 
 // Example: Move the screen to the left
 function moveLeft() {
-  cameraX -= 10; // Move 10 pixels to the left
-  moveScreen(cameraX);
+    cameraX -= 10; // Move 10 pixels to the left
+    moveScreen(cameraX);
 }
 
 function vector(x, y) {
     let createdVector = Matter.Vector.create(x, y)
     return createdVector
-} 
+}
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
     let input = event.key
     console.log(input);
     Matter.Body.rotate(boxB, 0.2)
@@ -138,18 +138,22 @@ document.addEventListener("keydown", function(event) {
 
 
     Matter.Body.setVelocity(boxA, vector(4, 0))
-    moveRight()
+    // moveRight()
     // we need to use the player and get keyboard inputs
 })
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
     let input = event.key
+    input = String(input)
     switch (input) {
         case "w":
             Matter.Body.setVelocity(player, vector(-10, 0));
+            break;
         case "d":
             Matter.Body.setVelocity(player, vector(5, 0));
+            break;
         case "a":
             Matter.Body.setVelocity(player, vector(-5, 0));
+            break;
     }
 })
