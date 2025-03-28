@@ -124,6 +124,10 @@ function moveLeft() {
   moveScreen(cameraX);
 }
 
+function vector(x, y) {
+    let createdVector = Matter.Vector.create(x, y)
+    return createdVector
+} 
 
 document.addEventListener("keydown", function(event) {
     let input = event.key
@@ -132,11 +136,20 @@ document.addEventListener("keydown", function(event) {
     let upwardsVector = Matter.Vector.create(0, -10)
     Matter.Body.setVelocity(boxC, upwardsVector)
 
-    function vector(x, y) {
-        let createdVector = Matter.Vector.create(x, y)
-        return createdVector
-    } 
+
     Matter.Body.setVelocity(boxA, vector(4, 0))
     moveRight()
     // we need to use the player and get keyboard inputs
+})
+
+document.addEventListener("keydown", function(event) {
+    let input = event.key
+    switch (input) {
+        case "w":
+            Matter.Body.setVelocity(player, vector(-10, 0));
+        case "d":
+            Matter.Body.setVelocity(player, vector(5, 0));
+        case "a":
+            Matter.Body.setVelocity(player, vector(-5, 0));
+    }
 })
