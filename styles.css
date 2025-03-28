@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    font-family: arial;
+}
+
+#onscreen-text {
+    display: flex;
+    position: absolute;
+    color: white;
+    background-color: rgb(0, 20, 82);
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 25px;
+    margin: 2px;
+    border: 2px, solid, white;
+    border-radius: 5px;
+}
+
+body {
+    display: flex;
+    flex-direction: row-reverse;
+}
