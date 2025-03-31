@@ -148,18 +148,18 @@ function vector(x, y) {
     return createdVector
 }
 let upwardsVector = Matter.Vector.create(0, -10)
-document.addEventListener("keydown", function (event) {
-    let input = event.key
-    console.log(input);
-    Matter.Body.rotate(boxB, 0.2)
+// document.addEventListener("keydown", function (event) {
+//     let input = event.key
+//     console.log(input);
+//     Matter.Body.rotate(boxB, 0.2)
 
-    Matter.Body.setVelocity(boxC, upwardsVector)
+//     Matter.Body.setVelocity(boxC, upwardsVector)
 
 
-    Matter.Body.setVelocity(boxA, vector(4, 0))
-    // moveRight()
-    // we need to use the player and get keyboard inputs
-})
+//     Matter.Body.setVelocity(boxA, vector(4, 0))
+//     // moveRight()
+//     // we need to use the player and get keyboard inputs
+// })
 
 document.addEventListener("keydown", function (event) {
     let input = event.key
