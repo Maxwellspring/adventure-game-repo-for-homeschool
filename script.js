@@ -72,10 +72,29 @@ const boxA = Bodies.rectangle(400, 200, 80, 80, { inertia: Infinity, inverseIner
 const boxB = Bodies.rectangle(450, 50, 90, 80);
 const boxC = dynamicBox(100, 100, 100, 100)
 const boxD = dynamicBox(100, 400, 100, 100)
-const player = Bodies.rectangle(600, 0, 100, 200, { inertia: Infinity, inverseInertia: 0 })
+const player = Bodies.rectangle(600, 0, 100, 200, { inertia: Infinity, inverseInertia: 0,
+    render: {
+        sprite: {
+            texture: "guy-stand.png"
+        }
+    }
+ })
 const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true });
 const mouseBox = Bodies.rectangle(0, 0, 10, 10);
 
+
+// loadImage("./path/to/your/image.png", (url) => {
+//     const texturedBody = Bodies.rectangle(x, y, width, height, {
+//         render: {
+//             sprite: {
+//                 texture: url
+//             }
+//         }
+//     });
+//     World.add(world, texturedBody);
+// }, () => {
+//     console.error("Error loading image");
+// });
 // add all of the bodies to the world
 // do NOT directly add a dynamicBox() element to this, it is UNSTABLE
 Composite.add(engine.world, [boxA, boxB, boxC, boxD, ground, player]);
