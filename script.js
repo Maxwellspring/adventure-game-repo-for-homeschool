@@ -147,12 +147,12 @@ function vector(x, y) {
     let createdVector = Matter.Vector.create(x, y)
     return createdVector
 }
-
+let upwardsVector = Matter.Vector.create(0, -10)
 document.addEventListener("keydown", function (event) {
     let input = event.key
     console.log(input);
     Matter.Body.rotate(boxB, 0.2)
-    let upwardsVector = Matter.Vector.create(0, -10)
+
     Matter.Body.setVelocity(boxC, upwardsVector)
 
 
@@ -166,7 +166,7 @@ document.addEventListener("keydown", function (event) {
     input = String(input)
     switch (input) {
         case "w":
-            Matter.Body.setVelocity(player, vector(-10, 0));
+            Matter.Body.setVelocity(player, upwardsVector);
             break;
         case "d":
             Matter.Body.setVelocity(player, vector(5, 0));
