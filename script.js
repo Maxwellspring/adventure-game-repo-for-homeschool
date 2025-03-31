@@ -41,7 +41,7 @@ let render = Render.create({
         wireframeBackground: '#222',
         hasBounds: true,
         enabled: true,
-        wireframes: true,
+        wireframes: false,
         showSleeping: true,
         showDebug: true,
         showBroadphase: true,
@@ -75,11 +75,17 @@ const boxD = dynamicBox(100, 400, 100, 100)
 const player = Bodies.rectangle(600, 0, 100, 200, { inertia: Infinity, inverseInertia: 0,
     render: {
         sprite: {
-            texture: "guy-stand.png"
+            texture: "guy-stand.png",
+            xScale: 0.5,
+            yScale: 0.5
         }
     }
  })
-const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true });
+const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true,
+    render: {
+        fillStyle: 'red' // Set the fill color to red
+      }
+ });
 const mouseBox = Bodies.rectangle(0, 0, 10, 10);
 
 
