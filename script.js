@@ -70,6 +70,8 @@ function dynamicBox(X, Y, W, H) {
     const DynamicBox = Bodies.rectangle(X, Y, W, H);
     return DynamicBox
 }
+
+
 const boxA = Bodies.rectangle(400, 200, 80, 80, { inertia: Infinity, inverseInertia: 0 });
 const boxB = Bodies.rectangle(450, 50, 90, 80);
 const boxC = dynamicBox(100, 100, 100, 100)
@@ -92,21 +94,6 @@ const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true,
  });
 const mouseBox = Bodies.rectangle(0, 0, 10, 10);
 
-
-// loadImage("./path/to/your/image.png", (url) => {
-//     const texturedBody = Bodies.rectangle(x, y, width, height, {
-//         render: {
-//             sprite: {
-//                 texture: url
-//             }
-//         }
-//     });
-//     World.add(world, texturedBody);
-// }, () => {
-//     console.error("Error loading image");
-// });
-// add all of the bodies to the world
-// do NOT directly add a dynamicBox() element to this, it is UNSTABLE
 Composite.add(engine.world, [boxA, boxB, boxC, boxD, ground, player]);
 
 const mouse = Mouse.create(render.canvas)
@@ -171,6 +158,11 @@ let upwardsVector = Matter.Vector.create(player, -10)
 //     // we need to use the player and get keyboard inputs
 // })
 
+function scalePlayer(x, y) {
+    player.render.sprite.xScale = x
+    player.render.sprite.yScale = y
+}
+
 document.addEventListener("keydown", function (event) {
     let input = event.key
     input = String(input)
@@ -179,12 +171,15 @@ document.addEventListener("keydown", function (event) {
     switch (input) {
         case "w":
             Matter.Body.setVelocity(player, vector(playerVX, -10));
+            scalePlayer(1, 1);
             break;
         case "d":
             Matter.Body.setVelocity(player, vector(5, playerVY));
+            scalePlayer(-1, 1);
             break;
         case "a":
             Matter.Body.setVelocity(player, vector(-5, playerVY));
+            scalePlayer(1, -1);
             break;
     }
 })
