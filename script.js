@@ -178,7 +178,7 @@ document.addEventListener("keydown", function (event) {
     let playerVY = player.velocity.y
     switch (input) {
         case "w":
-            Matter.Body.setVelocity(playerVX, upwardsVector);
+            Matter.Body.setVelocity(player, vector(playerVX, -10));
             break;
         case "d":
             Matter.Body.setVelocity(player, vector(5, playerVY));
