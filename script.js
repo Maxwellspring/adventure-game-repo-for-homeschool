@@ -158,10 +158,10 @@ let upwardsVector = Matter.Vector.create(player, -10)
 //     // we need to use the player and get keyboard inputs
 // })
 
-function scalePlayer(x, y) {
-    player.render.sprite.xScale = x
-    player.render.sprite.yScale = y
-}
+// function scalePlayer(x, y) {
+//     player.render.sprite.xScale = x
+//     player.render.sprite.yScale = y
+// }
 
 document.addEventListener("keydown", function (event) {
     let input = event.key
@@ -171,15 +171,16 @@ document.addEventListener("keydown", function (event) {
     switch (input) {
         case "w":
             Matter.Body.setVelocity(player, vector(playerVX, -10));
-            scalePlayer(1, 1);
+            player.render.sprite.xScale = -5;
             break;
         case "d":
             Matter.Body.setVelocity(player, vector(5, playerVY));
-            scalePlayer(-1, 1);
+            player.render.sprite.yScale = -5;
             break;
         case "a":
             Matter.Body.setVelocity(player, vector(-5, playerVY));
-            scalePlayer(1, -1);
+            player.render.sprite.yScale = 5;
+            player.render.sprite.xScale = 5;
             break;
     }
 })
