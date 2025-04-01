@@ -174,15 +174,17 @@ let upwardsVector = Matter.Vector.create(player, -10)
 document.addEventListener("keydown", function (event) {
     let input = event.key
     input = String(input)
+    let playerVX = player.velocity.x
+    let playerVY = player.velocity.y
     switch (input) {
         case "w":
-            Matter.Body.setVelocity(player, upwardsVector);
+            Matter.Body.setVelocity(playerVX, upwardsVector);
             break;
         case "d":
-            Matter.Body.setVelocity(player, vector(5, player));
+            Matter.Body.setVelocity(player, vector(5, playerVY));
             break;
         case "a":
-            Matter.Body.setVelocity(player, vector(-5, player));
+            Matter.Body.setVelocity(player, vector(-5, playerVY));
             break;
     }
 })
