@@ -157,7 +157,7 @@ function vector(x, y) {
     let createdVector = Matter.Vector.create(x, y)
     return createdVector
 }
-let upwardsVector = Matter.Vector.create(0, -10)
+let upwardsVector = Matter.Vector.create(player, -10)
 // document.addEventListener("keydown", function (event) {
 //     let input = event.key
 //     console.log(input);
@@ -179,10 +179,10 @@ document.addEventListener("keydown", function (event) {
             Matter.Body.setVelocity(player, upwardsVector);
             break;
         case "d":
-            Matter.Body.setVelocity(player, vector(5, 0));
+            Matter.Body.setVelocity(player, vector(5, player));
             break;
         case "a":
-            Matter.Body.setVelocity(player, vector(-5, 0));
+            Matter.Body.setVelocity(player, vector(-5, player));
             break;
     }
 })
