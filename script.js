@@ -12,10 +12,6 @@ let windowHeight = window.innerHeight;
 //     return [windowWidth, windowHeight]
 // })
 
-
-
-
-
 // module aliases
 const Engine = Matter.Engine,
     Render = Matter.Render,
@@ -36,32 +32,38 @@ let render = Render.create({
     options: {
         width: windowWidth,
         height: windowHeight,
-        pixelRatio: 3,
+        pixelRatio: 2,
         background: '#fafafa',
         wireframeBackground: '#222',
-        hasBounds: true,
         enabled: true,
+        hasBounds: true,
         wireframes: false,
-        showSleeping: true,
-        showDebug: true,
-        showBroadphase: true,
-        showBounds: true,
-        showVelocity: true,
-        showCollisions: true,
-        showSeparations: true,
-        showAxes: true,
-        showPositions: true,
-        showAngleIndicator: true,
-        showIds: true,
         showShadows: true,
-        showVertexNumbers: true,
+        showSleeping: true,
+        showBroadphase: true,
         showConvexHulls: true,
         showInternalEdges: true,
-        showMousePosition: false
+        showMousePosition: false,
+        // debug stuff VVV
+        showIds: false, // important
+        showAxes: false, // important
+        showDebug: false, // important
+        showBounds: false, // important
+        showVelocity: false, // important
+        showPositions: false, // important
+        showCollisions: false, // important
+        showSeparations: false, // important
+        showVertexNumbers: false, // important
+        showAngleIndicator: false, // important
     }
 });
 
-
+        // **Important:** Disable image smoothing here, after the renderer is created.
+        render.context.imageSmoothingEnabled = false;
+        //For older browsers that use vendor prefixes.
+        render.context.mozImageSmoothingEnabled = false;
+        render.context.webkitImageSmoothingEnabled = false;
+        render.context.msImageSmoothingEnabled = false;
 
 // create two boxes and a ground
 function dynamicBox(X, Y, W, H) {
@@ -75,11 +77,13 @@ const boxD = dynamicBox(100, 400, 100, 100)
 const player = Bodies.rectangle(600, 0, 100, 200, { inertia: Infinity, inverseInertia: 0,
     render: {
         sprite: {
-            texture: "guy-stand.png",
-            xScale: 0.5,
-            yScale: 0.5
+            texture: "guy-standing.png",
+            xScale: -5,
+            yScale: 5
         }
-    }
+    },
+    friction: 0.5,
+    frictionStatic: 0,
  })
 const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true,
     render: {
@@ -182,3 +186,4 @@ document.addEventListener("keydown", function (event) {
             break;
     }
 })
+
