@@ -58,12 +58,12 @@ let render = Render.create({
     }
 });
 
-        // **Important:** Disable image smoothing here, after the renderer is created.
-        render.context.imageSmoothingEnabled = false;
-        //For older browsers that use vendor prefixes.
-        render.context.mozImageSmoothingEnabled = false;
-        render.context.webkitImageSmoothingEnabled = false;
-        render.context.msImageSmoothingEnabled = false;
+// **Important:** Disable image smoothing here, after the renderer is created.
+render.context.imageSmoothingEnabled = false;
+//For older browsers that use vendor prefixes.
+render.context.mozImageSmoothingEnabled = false;
+render.context.webkitImageSmoothingEnabled = false;
+render.context.msImageSmoothingEnabled = false;
 
 // create two boxes and a ground
 function dynamicBox(X, Y, W, H) {
@@ -76,22 +76,24 @@ const boxA = Bodies.rectangle(400, 200, 80, 80, { inertia: Infinity, inverseIner
 const boxB = Bodies.rectangle(450, 50, 90, 80);
 const boxC = dynamicBox(100, 100, 100, 100)
 const boxD = dynamicBox(100, 400, 100, 100)
-const player = Bodies.rectangle(600, 0, 100, 200, { inertia: Infinity, inverseInertia: 0,
+const player = Bodies.rectangle(600, 0, 100, 200, {
+    inertia: Infinity, inverseInertia: 0,
     render: {
         sprite: {
-            texture: "guy-standing.png",
+            texture: "guy-standingT.png",
             xScale: -5,
             yScale: 5
         }
     },
     friction: 0.5,
     frictionStatic: 0,
- })
-const ground = Bodies.rectangle(400, 700, 10000, 1, { isStatic: true,
+})
+const ground = Bodies.rectangle(400, 700, 10000, 1, {
+    isStatic: true,
     render: {
         fillStyle: 'red' // Set the fill color to red
-      }
- });
+    }
+});
 const mouseBox = Bodies.rectangle(0, 0, 10, 10);
 
 Composite.add(engine.world, [boxA, boxB, boxC, boxD, ground, player]);
@@ -144,44 +146,74 @@ function vector(x, y) {
     let createdVector = Matter.Vector.create(x, y)
     return createdVector
 }
-let upwardsVector = Matter.Vector.create(player, -10)
+
+
 // document.addEventListener("keydown", function (event) {
 //     let input = event.key
-//     console.log(input);
-//     Matter.Body.rotate(boxB, 0.2)
-
-//     Matter.Body.setVelocity(boxC, upwardsVector)
-
-
-//     Matter.Body.setVelocity(boxA, vector(4, 0))
-//     // moveRight()
-//     // we need to use the player and get keyboard inputs
+//     input = String(input)
+//     let playerVX = player.velocity.x
+//     let playerVY = player.velocity.y
+//     switch (input) {
+//         case "w":
+//             Matter.Body.setVelocity(player, vector(playerVX, -10));
+//             player.render.sprite.xScale = -5;
+//             break;
+//         case "d":
+//             Matter.Body.setVelocity(player, vector(5, playerVY));
+//             player.render.sprite.yScale = -5;
+//             break;
+//         case "a":
+//             Matter.Body.setVelocity(player, vector(-5, playerVY));
+//             player.render.sprite.yScale = 5;
+//             player.render.sprite.xScale = 5;
+//             console.log(player)
+//             break;
+//     }
 // })
 
-// function scalePlayer(x, y) {
-//     player.render.sprite.xScale = x
-//     player.render.sprite.yScale = y
-// }
+let inputKeysArray = []
 
 document.addEventListener("keydown", function (event) {
-    let input = event.key
-    input = String(input)
-    let playerVX = player.velocity.x
-    let playerVY = player.velocity.y
-    switch (input) {
-        case "w":
-            Matter.Body.setVelocity(player, vector(playerVX, -10));
-            player.render.sprite.xScale = -5;
-            break;
-        case "d":
-            Matter.Body.setVelocity(player, vector(5, playerVY));
-            player.render.sprite.yScale = -5;
-            break;
-        case "a":
-            Matter.Body.setVelocity(player, vector(-5, playerVY));
-            player.render.sprite.yScale = 5;
-            player.render.sprite.xScale = 5;
-            break;
+    let input = String(event.key)
+    if (!inputKeysArray.includes(input)) {
+        console.log("IT DONT HAVE IT")
+        inputKeysArray.push(input);
+        return inputKeysArray
     }
+
+});
+
+document.addEventListener("keyup", function (event) {
+    let input = String(event.key)
+    let removedItemIndex = inputKeysArray.indexOf(input);
+    if (removedItemIndex != -1) {
+        inputKeysArray.splice(removedItemIndex, 1)
+    }
+    return inputKeysArray
 })
 
+function doInput() {
+    console.log(inputKeysArray)
+        let playerVX = player.velocity.x
+        let playerVY = player.velocity.y
+        switch (inputKeysArray) {
+            case inputKeysArray.includes('w'):
+                Matter.Body.setVelocity(player, vector(playerVX, -10));
+                player.render.sprite.xScale = -5;
+                console.log("w :3")
+                break;
+            case inputKeysArray.includes('a'):
+                Matter.Body.setVelocity(player, vector(5, playerVY));
+                player.render.sprite.yScale = -5;
+                break;
+            case inputKeysArray.includes('d'):
+                Matter.Body.setVelocity(player, vector(-5, playerVY));
+                player.render.sprite.yScale = 5;
+                player.render.sprite.xScale = 5;
+                console.log(player)
+                break;
+        }
+
+}
+
+setInterval(doInput, 100)
