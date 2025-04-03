@@ -194,26 +194,28 @@ document.addEventListener("keyup", function (event) {
 
 function doInput() {
     console.log(inputKeysArray)
-        let playerVX = player.velocity.x
-        let playerVY = player.velocity.y
-        switch (inputKeysArray) {
-            case inputKeysArray.includes('w'):
-                Matter.Body.setVelocity(player, vector(playerVX, -10));
-                player.render.sprite.xScale = -5;
-                console.log("w :3")
-                break;
-            case inputKeysArray.includes('a'):
-                Matter.Body.setVelocity(player, vector(5, playerVY));
-                player.render.sprite.yScale = -5;
-                break;
-            case inputKeysArray.includes('d'):
-                Matter.Body.setVelocity(player, vector(-5, playerVY));
-                player.render.sprite.yScale = 5;
-                player.render.sprite.xScale = 5;
-                console.log(player)
-                break;
-        }
+    let playerVX = player.velocity.x
+    let playerVY = player.velocity.y
+    switch (true) {
+        case inputKeysArray.includes('w'):
+            Matter.Body.setVelocity(player, vector(playerVX, -8));
+            player.render.sprite.xScale = -5;
+            break;
+        case inputKeysArray.includes('d'):
+            Matter.Body.setVelocity(player, vector(5, playerVY));
+            player.render.sprite.yScale = -5;
+            break;
+        case inputKeysArray.includes('a'):
+            Matter.Body.setVelocity(player, vector(-5, playerVY));
+            player.render.sprite.yScale = 5;
+            player.render.sprite.xScale = 5;
+            break;
+        case inputKeysArray.includes('s'):
+            Matter.Body.setVelocity(player, vector(playerVX, 8));
+            player.render.sprite.xScale = -5;
+            break;
+    }
 
 }
 
-setInterval(doInput, 100)
+setInterval(doInput, 10)
