@@ -76,6 +76,7 @@ const boxA = Bodies.rectangle(400, 200, 80, 80, { inertia: Infinity, inverseIner
 const boxB = Bodies.rectangle(450, 50, 90, 80);
 const boxC = dynamicBox(100, 100, 100, 100)
 const boxD = dynamicBox(100, 400, 100, 100)
+
 const player = Bodies.rectangle(600, 0, 100, 200, {
     inertia: Infinity, inverseInertia: 0,
     render: {
@@ -88,15 +89,37 @@ const player = Bodies.rectangle(600, 0, 100, 200, {
     friction: 0.5,
     frictionStatic: 0,
 })
+
 const ground = Bodies.rectangle(400, 700, 10000, 1, {
     isStatic: true,
     render: {
         fillStyle: 'red' // Set the fill color to red
     }
 });
+
+const jumpTrigger = Bodies.rectangle(600, 100, 80, 10, {
+    inertia: Infinity, inverseInertia: 0,
+    render: {
+        fillStyle: 'cyan'
+    },
+    friction: 0.5,
+    frictionStatic: 0,
+    isSensor: true,
+})
+
 const mouseBox = Bodies.rectangle(0, 0, 10, 10);
 
-Composite.add(engine.world, [boxA, boxB, boxC, boxD, ground, player]);
+function compAddWorld(thing) {
+    Composite.add(engine.world, thing)
+}
+
+let constructedPlayer = Matter.Body.create({
+    parts: [jumpTrigger, player]
+})
+
+compAddWorld(constructedPlayer)
+
+compAddWorld([boxA, boxB, boxC, boxD, ground])
 
 const mouse = Mouse.create(render.canvas)
 
@@ -109,7 +132,7 @@ const mouseConstraint = MouseConstraint.create(engine, {
     }
 });
 
-Composite.add(engine.world, mouseConstraint);
+compAddWorld(mouseConstraint)
 
 // run the renderer
 Render.run(render);
@@ -147,32 +170,10 @@ function vector(x, y) {
     return createdVector
 }
 
-
-// document.addEventListener("keydown", function (event) {
-//     let input = event.key
-//     input = String(input)
-//     let playerVX = player.velocity.x
-//     let playerVY = player.velocity.y
-//     switch (input) {
-//         case "w":
-//             Matter.Body.setVelocity(player, vector(playerVX, -10));
-//             player.render.sprite.xScale = -5;
-//             break;
-//         case "d":
-//             Matter.Body.setVelocity(player, vector(5, playerVY));
-//             player.render.sprite.yScale = -5;
-//             break;
-//         case "a":
-//             Matter.Body.setVelocity(player, vector(-5, playerVY));
-//             player.render.sprite.yScale = 5;
-//             player.render.sprite.xScale = 5;
-//             console.log(player)
-//             break;
-//     }
-// })
-
+// holds the current inputs
 let inputKeysArray = []
 
+// add an input key to the array, if it is already in it, dont add any more
 document.addEventListener("keydown", function (event) {
     let input = String(event.key)
     if (!inputKeysArray.includes(input)) {
@@ -183,6 +184,8 @@ document.addEventListener("keydown", function (event) {
 
 });
 
+// removes an input key from the array, figures out what button leave and removes
+// only that button
 document.addEventListener("keyup", function (event) {
     let input = String(event.key)
     let removedItemIndex = inputKeysArray.indexOf(input);
@@ -192,30 +195,53 @@ document.addEventListener("keyup", function (event) {
     return inputKeysArray
 })
 
+let isOnGround = false
+
+// detect if there is a thing to jump on
+Matter.Events.on(engine, 'collisionActive', function(event) {
+    let thing = event.pairs.length
+    if (thing > 4) {
+        console.log("collision!")
+        isOnGround = true
+
+    } else {
+        console.log("no collison")
+        isOnGround = false
+    }
+    console.log(thing)
+    return isOnGround
+})
+
+// this is what does the input for player movement
 function doInput() {
     console.log(inputKeysArray)
-    let playerVX = player.velocity.x
-    let playerVY = player.velocity.y
+    let playerVX = constructedPlayer.velocity.x
+    let playerVY = constructedPlayer.velocity.y
     switch (true) {
         case inputKeysArray.includes('w'):
-            Matter.Body.setVelocity(player, vector(playerVX, -8));
-            player.render.sprite.xScale = -5;
+            if (isOnGround == true) {
+                Matter.Body.setVelocity(constructedPlayer, vector(playerVX, -8));
+                constructedPlayer.render.sprite.xScale = -5;
+            }
             break;
         case inputKeysArray.includes('d'):
-            Matter.Body.setVelocity(player, vector(5, playerVY));
-            player.render.sprite.yScale = -5;
+            Matter.Body.setVelocity(constructedPlayer, vector(5, playerVY));
+            constructedPlayer.render.sprite.yScale = -5;
             break;
         case inputKeysArray.includes('a'):
-            Matter.Body.setVelocity(player, vector(-5, playerVY));
-            player.render.sprite.yScale = 5;
-            player.render.sprite.xScale = 5;
+            Matter.Body.setVelocity(constructedPlayer, vector(-5, playerVY));
+            constructedPlayer.render.sprite.yScale = 5;
+            constructedPlayer.render.sprite.xScale = 5;
             break;
         case inputKeysArray.includes('s'):
-            Matter.Body.setVelocity(player, vector(playerVX, 8));
-            player.render.sprite.xScale = -5;
+            Matter.Body.setVelocity(constructedPlayer, vector(playerVX, playerVY +1));
+            constructedPlayer.render.sprite.xScale = -5;
             break;
     }
-
 }
 
+// this simply constantly cakks the playermovement function
 setInterval(doInput, 10)
+
+// construct an output based off of what is in the input keys array, if it has
+// for example "a" then add the velocity that handles the "a" input.
