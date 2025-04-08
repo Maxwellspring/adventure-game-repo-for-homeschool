@@ -118,7 +118,6 @@ let constructedPlayer = Matter.Body.create({
 })
 
 compAddWorld(constructedPlayer)
-
 compAddWorld([boxA, boxB, boxC, boxD, ground])
 
 const mouse = Mouse.create(render.canvas)
@@ -199,18 +198,43 @@ let isOnGround = false
 
 // detect if there is a thing to jump on
 Matter.Events.on(engine, 'collisionActive', function(event) {
-    let thing = event.pairs.length
-    if (thing > 4) {
-        console.log("collision!")
-        isOnGround = true
+    // // let thing = event.pairs.length
+    // // if (thing > 4) {
+    // //     console.log("collision!")
+    // //     isOnGround = true
 
-    } else {
-        console.log("no collison")
-        isOnGround = false
+    // // } else {
+    // //     console.log("no collison")
+    // //     isOnGround = false
+    // // }
+    // // console.log(thing)
+    // for (let i = 0; i < rank.length; i++) {
+    //     if (rank[i] == jumpTrigger) {
+    //         console.log('A THING')
+    //     }
+    // }
+
+    const rank = engine.world.bodies
+
+    const pair = event.pairs
+
+    for (let i=0;i< rank.length; i++) {
+        console.log("AAA")
+        console.log(rank[i])
+        if (rank[i] === jumpTrigger) {
+            console.log("YAYAYAYAYAYAYAYA")
+        }
+        
     }
-    console.log(thing)
-    return isOnGround
+    return console.log ("f")
+
+    // console.log(pair)
+
+    // console.log(rank + "rank")
+    // return isOnGround
 })
+
+// console.log(jumpTrigger + "AAAAAAA")
 
 // this is what does the input for player movement
 function doInput() {
@@ -241,7 +265,7 @@ function doInput() {
 }
 
 // this simply constantly cakks the playermovement function
-setInterval(doInput, 10)
+setInterval(doInput, 100)
 
 // construct an output based off of what is in the input keys array, if it has
 // for example "a" then add the velocity that handles the "a" input.
