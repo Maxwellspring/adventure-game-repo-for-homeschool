@@ -9,8 +9,10 @@ var config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 500 },
+            // overlapBias: 99,
             debug: true
-        }
+        },
+
     },
     scene: {
         preload: preload,
@@ -40,10 +42,20 @@ function create() {
     ground.create(100, visualViewport.height, "floor").setScale(20, 2).refreshBody();
 
 
-    this.player = this.physics.add.sprite(400, 400, "guy").setScale(2);
+    this.player = this.physics.add.sprite(200, 400, "guy").setScale(2);
     this.player.setBounce(0.2)
     this.player.setCollideWorldBounds(true)
+
+
     this.physics.add.collider(this.player, ground)
+
+    // let camera = this.cameras.main;
+
+    // let roundPixels = camera.roundPixels;
+
+    // camera.setRoundPixels(true);
+
+    // this.physics.world.overlapBias = 16;
 }
 
 
