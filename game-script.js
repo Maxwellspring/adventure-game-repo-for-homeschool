@@ -31,6 +31,7 @@ function preload() {
     this.load.image("floor", "floor-ig.png")
     this.load.image("guy", "guy-standingT.png")
     this.load.image("button", "button-ig.png")
+    this.load.image("scientist", "scientist-standing-new.png")
 
 }
 
@@ -45,12 +46,19 @@ function create() {
     // ground.create(100, 100, "floor").setScale(1).refreshBody();
     ground.create(100, visualViewport.height, "floor").setScale(20, 2).refreshBody();
 
+    this.player = this.physics.add.sprite(200, 400, "guy").setScale(2).setBounce(0.2).setCollideWorldBounds(true);
 
-    this.player = this.physics.add.sprite(200, 400, "guy").setScale(2);
-    this.player.setBounce(0.2)
-    this.player.setCollideWorldBounds(true)
+    this.scientist = this.physics.add.sprite(300, 400, "scientist").setScale(2).setBounce(0.2).setCollideWorldBounds(true).setDrag(100, 0);
 
     this.physics.add.collider(this.player, ground)
+    this.physics.add.collider(this.scientist, ground)
+    this.physics.add.overlap(this.player, this.scientist, onScientistOverlap, null, this);
+
+    function onScientistOverlap(player, scientist) {
+        console.log("Player collided with the scientist!");
+        // Perform your desired action here
+        // scientist.disableBody(true, true); // Example: Hide the scientist
+    }
 
     let testt = this.physics.add.group({
         key: 'floor',
@@ -71,7 +79,7 @@ function create() {
     function collectStar (player, star)
 {
     star.disableBody(true, true);
-    this.scene.restart()
+    // this.scene.restart()
 }
 
     // let camera = this.cameras.main;
