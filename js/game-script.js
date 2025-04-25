@@ -33,6 +33,8 @@ function preload() {
     this.load.image("guy", "../media/guy-standingT.png")
     this.load.image("button", "../media/button-ig.png")
     this.load.image("scientist", "../media/scientist-standing-new.png")
+    this.load.image("alert", "../media/Alert!.png")
+
 
 }
 // =====================================================================
@@ -49,27 +51,10 @@ function create() {
     this.player = this.physics.add.sprite(200, 400, "guy").setScale(2).setBounce(0.2).setCollideWorldBounds(true);
     this.scientist = this.physics.add.sprite(300, 400, "scientist").setScale(2).setBounce(0.2).setCollideWorldBounds(true).setDrag(100, 0);
     this.scientistTalkTrigger = this.physics.add.sprite(100, 100, null).setScale(3, 2).setBounce(0.2).setCollideWorldBounds(true).setDrag(0, 999).setGravityY(0).setVisible(false);
-    this.physics.add.collider(this.player, ground, onScientistTalkTriggerExit, null, this);
+    this.physics.add.collider(this.player, ground);
     this.physics.add.collider(this.scientist, ground)
-    this.physics.add.overlap(this.player, this.scientistTalkTrigger, onScientistTalkTriggerOverlap, null, this);
+    this.alert = this.physics.add.sprite(this.scientist.x, this.scientist.y + -50, "alert").setScale(4).setDrag(0, 999).setGravityY(0).setVisible(false);
 
-    let overlapping = false;
-
-    function onScientistTalkTriggerOverlap() {
-        console.log("Player collided");
-        if (overlapping == false) {
-            overlapping = true;
-            console.log("Scientist overlapped");
-            return overlapping;
-        }
-    }
-
-    function onScientistTalkTriggerExit() {
-        if (overlapping == true) {
-            console.log("Player exited");
-            overlapping = false;
-        }
-    }
 
     let testt = this.physics.add.group({
         key: 'floor',
@@ -96,12 +81,18 @@ function create() {
 
 }
 // =====================================================================
-
+let distanceToScientist = false;
 // =====================================================================
 function update() {
 
     this.scientistTalkTrigger.x = this.scientist.x;
     this.scientistTalkTrigger.y = this.scientist.y;
+
+    this.alert.x = this.scientist.x;
+    this.alert.y = this.scientist.y - 50;
+
+    let playerToScientist = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.scientist.x, this.scientist.y)
+
 
     let cursors = this.input.keyboard.createCursorKeys();
 
@@ -123,6 +114,21 @@ function update() {
 
     if (cursors.up.isDown && this.player.body.touching.down) {
         this.player.setVelocityY(-400);
+    }
+
+    setInterval(distanceDetect(), 100)
+
+    function distanceDetect() {
+        if (playerToScientist < 50 && distanceToScientist == false) {
+            console.log("within range of scientist");
+            distanceToScientist = true;
+            this.alert.setVisible(true);
+        } else if (playerToScientist > 50 && distanceToScientist == true) {
+            console.log("not within range of scientist");
+            distanceToScientist = false;
+            // this.alert.setVisible(false);
+        }
+        return distanceToScientist;
     }
 
 }
