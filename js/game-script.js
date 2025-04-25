@@ -26,16 +26,18 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+// =====================================================================
 function preload() {
-    this.load.image("background", "background-ig.png")
-    this.load.image("floor", "floor-ig.png")
-    this.load.image("guy", "guy-standingT.png")
-    this.load.image("button", "button-ig.png")
-    this.load.image("scientist", "scientist-standing-new.png")
+    this.load.image("background", "../media/background-ig.png")
+    this.load.image("floor", "../media/floor-ig.png")
+    this.load.image("guy", "../media/guy-standingT.png")
+    this.load.image("button", "../media/button-ig.png")
+    this.load.image("scientist", "../media/scientist-standing-new.png")
 
 }
+// =====================================================================
 
-
+// =====================================================================
 function create() {
     this.add.image(centerScreenW, centerScreenH, "background").setScale(5.1, 3.4);
 
@@ -43,21 +45,30 @@ function create() {
 
     ground.create(400, 560, "floor").setScale(6, 2).refreshBody();
     ground.create(600, 400, "floor").setScale(5, 2).refreshBody();
-    // ground.create(100, 100, "floor").setScale(1).refreshBody();
     ground.create(100, visualViewport.height, "floor").setScale(20, 2).refreshBody();
-
     this.player = this.physics.add.sprite(200, 400, "guy").setScale(2).setBounce(0.2).setCollideWorldBounds(true);
-
     this.scientist = this.physics.add.sprite(300, 400, "scientist").setScale(2).setBounce(0.2).setCollideWorldBounds(true).setDrag(100, 0);
-
-    this.physics.add.collider(this.player, ground)
+    this.scientistTalkTrigger = this.physics.add.sprite(100, 100, null).setScale(3, 2).setBounce(0.2).setCollideWorldBounds(true).setDrag(0, 999).setGravityY(0).setVisible(false);
+    this.physics.add.collider(this.player, ground, onScientistTalkTriggerExit, null, this);
     this.physics.add.collider(this.scientist, ground)
-    this.physics.add.overlap(this.player, this.scientist, onScientistOverlap, null, this);
+    this.physics.add.overlap(this.player, this.scientistTalkTrigger, onScientistTalkTriggerOverlap, null, this);
 
-    function onScientistOverlap(player, scientist) {
-        console.log("Player collided with the scientist!");
-        // Perform your desired action here
-        // scientist.disableBody(true, true); // Example: Hide the scientist
+    let overlapping = false;
+
+    function onScientistTalkTriggerOverlap() {
+        console.log("Player collided");
+        if (overlapping == false) {
+            overlapping = true;
+            console.log("Scientist overlapped");
+            return overlapping;
+        }
+    }
+
+    function onScientistTalkTriggerExit() {
+        if (overlapping == true) {
+            console.log("Player exited");
+            overlapping = false;
+        }
     }
 
     let testt = this.physics.add.group({
@@ -66,41 +77,32 @@ function create() {
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
-    testt.children.iterate(function (child) {
-
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
-
     this.physics.add.collider(testt, ground);
-
     this.physics.add.overlap(this.player, testt, collectStar, null, this);
 
-    function collectStar (player, star)
-{
-    star.disableBody(true, true);
-    // this.scene.restart()
-}
+    testt.children.iterate(function (child) {
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
 
-    // let camera = this.cameras.main;
-
-    // let roundPixels = camera.roundPixels;
-
-    // camera.setRoundPixels(true);
-
-    // this.physics.world.overlapBias = 16;
+    function collectStar(player, star) {
+        star.disableBody(true, true);
+    }
 
     let buttonReset = this.add.image(100, 100, "button").setScale(3, 4).setInteractive();
-
-    // Add a click event listener
     buttonReset.on('pointerdown', () => {
         console.log("Button clicked!");
-        this.scene.restart() 
+        this.scene.restart()
     });
 
 }
+// =====================================================================
 
+// =====================================================================
 function update() {
+
+    this.scientistTalkTrigger.x = this.scientist.x;
+    this.scientistTalkTrigger.y = this.scientist.y;
+
     let cursors = this.input.keyboard.createCursorKeys();
 
     if (cursors.left.isDown) {
@@ -108,20 +110,19 @@ function update() {
         this.player.scaleX = -2
         this.player.body.setOffset(20, 0)
     }
+
     else if (cursors.right.isDown) {
         this.player.setVelocityX(160);
         this.player.scaleX = 2
         this.player.body.setOffset(0, 0)
-
     }
+
     else {
         this.player.setVelocityX(0);
-
     }
 
     if (cursors.up.isDown && this.player.body.touching.down) {
         this.player.setVelocityY(-400);
     }
-
 
 }
