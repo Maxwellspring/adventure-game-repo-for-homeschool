@@ -10,7 +10,7 @@ var config = {
         arcade: {
             gravity: { y: 500 },
             // overlapBias: 99,
-            debug: true
+            debug: false
         },
 
     },
@@ -21,7 +21,8 @@ var config = {
     },
     render: {
         pixelArt: true
-    }
+    },
+    fps: { target: 60, forceSetTimeOut: true }
 };
 
 var game = new Phaser.Game(config);
@@ -55,12 +56,13 @@ function create() {
     this.physics.add.collider(this.scientist, ground)
     this.alert = this.physics.add.sprite(this.scientist.x, this.scientist.y + -50, "alert").setScale(4).setDrag(0, 999).setGravityY(0).setVisible(false);
 
-
     let testt = this.physics.add.group({
         key: 'floor',
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
+
+
 
     this.physics.add.collider(testt, ground);
     this.physics.add.overlap(this.player, testt, collectStar, null, this);
@@ -81,7 +83,8 @@ function create() {
 
 }
 // =====================================================================
-let distanceToScientist = false;
+// let distanceToScientist = false;
+
 // =====================================================================
 function update() {
 
@@ -89,9 +92,8 @@ function update() {
     this.scientistTalkTrigger.y = this.scientist.y;
 
     this.alert.x = this.scientist.x;
-    this.alert.y = this.scientist.y - 50;
+    this.alert.y = this.scientist.y - 58;
 
-    let playerToScientist = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.scientist.x, this.scientist.y)
 
 
     let cursors = this.input.keyboard.createCursorKeys();
@@ -116,19 +118,19 @@ function update() {
         this.player.setVelocityY(-400);
     }
 
-    setInterval(distanceDetect(), 100)
+    let playerToScientist = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.scientist.x, this.scientist.y)
 
-    function distanceDetect() {
-        if (playerToScientist < 50 && distanceToScientist == false) {
-            console.log("within range of scientist");
-            distanceToScientist = true;
-            this.alert.setVisible(true);
-        } else if (playerToScientist > 50 && distanceToScientist == true) {
-            console.log("not within range of scientist");
-            distanceToScientist = false;
-            // this.alert.setVisible(false);
+    console.log("--------------------playerToScientist: " + playerToScientist + "--------------------");
+
+    if (playerToScientist < 50) {
+        console.log("within range of scientist" + playerToScientist);
+        this.alert.setVisible(true);
+        if (cursors.down.isDown) {
+            console.log("PRESSSSSSSSSSSSSSSSSSSSSSSS")
         }
-        return distanceToScientist;
+    } else {
+        console.log("not within range of scientist" + playerToScientist);
+        this.alert.setVisible(false);
     }
 
 }
